@@ -1,0 +1,37 @@
+<mxfile host="Electron" modified="2023-10-13T10:59:51.668Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" etag="gHKu6azjZdVHbx_HuN_t" version="21.1.2" type="device">
+  <diagram name="Страница 1" id="O7MRs_6kxlbN8Mxizn9J">
+    <mxGraphModel dx="973" dy="654" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ZV1bl8aVmT38kcgYfzDI-7" value="" style="fillColor=#FFA12D;strokeColor=none;whiteSpace=wrap;html=1;rounded=1;glass=0;" vertex="1" parent="1">
+          <mxGeometry x="160" y="110" width="390" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="ZV1bl8aVmT38kcgYfzDI-8" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ZV1bl8aVmT38kcgYfzDI-2" target="ZV1bl8aVmT38kcgYfzDI-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZV1bl8aVmT38kcgYfzDI-2" value="Информация&amp;nbsp;&lt;br&gt;о пользователе&amp;nbsp;&lt;br&gt;для авторизации" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ZV1bl8aVmT38kcgYfzDI-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" edge="1" parent="1" source="ZV1bl8aVmT38kcgYfzDI-4" target="ZV1bl8aVmT38kcgYfzDI-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZV1bl8aVmT38kcgYfzDI-10" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ZV1bl8aVmT38kcgYfzDI-4" target="ZV1bl8aVmT38kcgYfzDI-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZV1bl8aVmT38kcgYfzDI-4" value="Модуль&lt;br&gt;авторизации" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ZV1bl8aVmT38kcgYfzDI-11" style="edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ZV1bl8aVmT38kcgYfzDI-5" target="ZV1bl8aVmT38kcgYfzDI-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZV1bl8aVmT38kcgYfzDI-5" value="Система" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="310" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ZV1bl8aVmT38kcgYfzDI-6" value="База данных" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="230" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
