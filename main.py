@@ -1,6 +1,7 @@
 import sys
 import json
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QMainWindow, QTextEdit, QDialog  # type: ignore
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, \
+    QMessageBox, QMainWindow, QTextEdit, QDialog  # type: ignore
 from openpyxl import load_workbook, Workbook  # type: ignore
 import os
 import qrcode  # type: ignore
@@ -8,13 +9,19 @@ from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt6.QtGui import QPixmap  # type: ignore
 from icecream import ic  # type: ignore
+import time
+from pyzbar.pyzbar import decode
+from PIL import Image
+import io
+import pygame.camera
+import pygame.image
 
 
 class LoginWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle('Login Window')
+        self.setWindowTitle('Окно авторизации')
         self.setGeometry(100, 100, 400, 200)
 
         self.init_ui()
@@ -121,8 +128,8 @@ class SecondWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle('Second Window')
-        self.setGeometry(100, 100, 600, 400)
+        self.setWindowTitle('Основное окно приложения')
+        self.setGeometry(200, 200, 1000, 1000)
 
         self.init_ui()
 
@@ -160,11 +167,15 @@ class SecondWindow(QMainWindow):
         view_qr_button = QPushButton('Открыть QR-код')
         view_qr_button.clicked.connect(self.view_qr_code)
 
+        read_qr_button = QPushButton('Считать QR-код')
+        read_qr_button.clicked.connect(self.read_qr_code)
+
         self.result_display = QTextEdit()
 
         layout.addWidget(view_db_button)
         layout.addWidget(add_record_button)
         layout.addWidget(view_qr_button)
+        layout.addWidget(read_qr_button)
         layout.addWidget(self.result_display)
 
         central_widget.setLayout(layout)
@@ -177,7 +188,7 @@ class SecondWindow(QMainWindow):
 
             data = []
             for row in sheet.iter_rows(values_only=True):
-                data.append('\t'.join(map(str, row)))
+                data.append('\t\t'.join(map(str, row)))
 
             ic(data)
             self.result_display.setPlainText('\n'.join(data))
@@ -209,6 +220,91 @@ class SecondWindow(QMainWindow):
         except Exception as e:
             self.show_error_message('Ошибка', f'Ошибка при чтении базы данных: {str(e)}')
 
+    def read_qr_code(self):
+        # pass
+        # Инициализация камеры
+        pygame.camera.init()
+        cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
+        cam.start()
+
+        # Инициализация Pygame
+        pygame.init()
+        screen = pygame.display.set_mode(cam.get_size())
+
+        while True:
+            flag = False
+            # Захват кадра
+            img = cam.get_image()
+
+            # Преобразование кадра в формат, понятный для Pygame
+            img_surface = pygame.image.fromstring(pygame.image.tostring(img, "RGB"), img.get_size(), "RGB")
+
+            # Отображение кадра на экране
+            screen.blit(img_surface, (0, 0))
+            pygame.display.flip()
+
+            # Преобразование кадра в формат, понятный для pyzbar
+            pil_img = Image.frombytes("RGB", img.get_size(), pygame.image.tostring(img, "RGB"))
+
+            # Декодирование QR-кодов
+            decoded_objects = decode(pil_img)
+
+            # Вывод содержимого QR-кодов
+            for obj in decoded_objects:
+                print("QR Code Detected:", obj.data.decode())
+                if obj.data.decode():
+                    flag = True
+                    data = obj.data.decode().split(' | ')
+                    field1 = data[0]
+                    field2 = data[1]
+                    field3 = data[2]
+                    ic(field1, field2, field3)
+
+                    try:
+                        workbook = load_workbook('Database/data.xlsx')
+                        sheet = workbook.active
+
+                        # Генерация QR-кода
+                        qr = qrcode.QRCode(
+                            version=1,
+                            error_correction=qrcode.constants.ERROR_CORRECT_L,
+                            box_size=10,
+                            border=4,
+                        )
+                        qr.add_data(f'{field1} | {field2} | {field3}')
+                        qr.make(fit=True)
+                        qr_img = qr.make_image(fill_color="black", back_color="white")
+
+                        # Сохранение QR-кода в файл
+                        qr_img_path = f'Database/qrcodes/{field1}_{field2}_{field3}_qrcode.png'
+                        qr_img.save(qr_img_path)
+
+                        # Добавление записи в базу данных
+                        sheet.append([field1, field2, field3, qr_img_path])
+                        workbook.save('Database/data.xlsx')
+
+                        # self.parent().view_database()
+                        # self.accept()
+
+                    except FileNotFoundError:
+                        self.parent().show_error_message('Ошибка', 'Файл с базой данных не найден')
+                    except Exception as e:
+                        self.parent().show_error_message('Ошибка', f'Ошибка при записи в базу данных: {str(e)}')
+
+            if flag:
+                time.sleep(0.5)
+                pygame.quit()
+                # sys.exit()
+                break
+
+            # Обработка событий Pygame
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            time.sleep(0.05)  # Пауза для предотвращения чрезмерной загрузки процессора
+
     def add_record_to_database(self):
         add_record_dialog = AddRecordDialog(self)
         add_record_dialog.exec()
@@ -233,9 +329,9 @@ class AddRecordDialog(QDialog):
     def init_ui(self):
         layout = QVBoxLayout()
 
-        label1 = QLabel('Поле 1:')
-        label2 = QLabel('Поле 2:')
-        label3 = QLabel('Поле 3:')
+        label1 = QLabel('ИД:        ')
+        label2 = QLabel('Название:  ')
+        label3 = QLabel('Количество:')
 
         self.field1_edit = QLineEdit()
         self.field2_edit = QLineEdit()
